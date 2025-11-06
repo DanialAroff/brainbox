@@ -275,7 +275,7 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for security best practices.
 
 ## License
 
-ISC
+MIT
 
 ## Contributing
 
