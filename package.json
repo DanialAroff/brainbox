@@ -1,0 +1,37 @@
+{
+  "name": "internal-faq-hub",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "api": "tsx src/api.ts",
+    "ingest": "tsx src/ingest.ts",
+    "query": "tsx src/query.ts",
+    "mcp": "tsx src/mcp-server.ts",
+    "build": "tsc",
+    "build:mcp": "npm run build && node dist/mcp-server.js"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@chroma-core/default-embed": "^0.1.8",
+    "@modelcontextprotocol/sdk": "^1.21.0",
+    "axios": "^1.13.2",
+    "chromadb": "^3.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "fs-extra": "^11.3.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^24.10.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "internal-faq-hub": {
+      "command": "node",
+      "args": ["dist/mcp-server.js"],
+      "env": {
+        "LMSTUDIO_URL": "http://127.0.0.1:1234/v1/embeddings",
+        "EMBED_MODEL": "text-embedding-nomic-embed-text-v1.5",
+        "CHROMA_HOST": "localhost",
+        "CHROMA_PORT": "8000",
+        "CHROMA_SSL": "false",
+        "COLLECTION_NAME": "internal-faq",
+        "FAQS_PATH": "./data/faqs"
+      }
+    }
+  }
+}
