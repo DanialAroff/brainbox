@@ -1,4 +1,4 @@
-# Internal FAQ Hub
+# BrainBox
 
 A semantic search API for internal FAQs using vector embeddings and ChromaDB.
 
@@ -48,11 +48,53 @@ Edit `.env` with your settings:
 ### 3. Set Up Services
 
 Make sure you have:
-- **LM Studio** running with an embedding model (or compatible API)
+- **Embedding Service** (choose one):
+  - **LM Studio** with an embedding model (or compatible API)
+  - **llama.cpp server** (see instructions below)
 - **ChromaDB** running (default: `localhost:8000`)
   ```bash
   docker run -p 8000:8000 chromadb/chroma
   ```
+
+#### Using llama.cpp as Embedding Service
+
+As an alternative to LM Studio, you can use llama.cpp's server for embeddings:
+
+**1. Install llama.cpp:**
+```bash
+git clone https://github.com/ggerganov/llama.cpp
+cd llama.cpp
+make
+```
+
+**2. Download an embedding model:**
+```bash
+# Example: nomic-embed-text (recommended for embeddings)
+wget https://huggingface.co/nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/nomic-embed-text-v1.5.Q8_0.gguf
+```
+
+**3. Start llama.cpp server with embedding support:**
+```bash
+./server -m nomic-embed-text-v1.5.Q8_0.gguf --port 1234 --embedding
+```
+
+**4. Update your `.env` file:**
+```env
+LMSTUDIO_URL=http://127.0.0.1:1234/v1/embeddings
+EMBED_MODEL=nomic-embed-text-v1.5
+```
+
+**5. Test the connection:**
+```bash
+curl http://127.0.0.1:1234/v1/embeddings \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "nomic-embed-text-v1.5",
+    "input": "test text"
+  }'
+```
+
+The llama.cpp server provides an OpenAI-compatible API, so it works seamlessly with this FAQ hub.
 
 ### 4. Add FAQ Files
 
@@ -136,7 +178,7 @@ For detailed API documentation, see [API_GUIDE.md](API_GUIDE.md).
 
 ## Usage Modes
 
-### 1. MCP Server (Recommended for Claude Desktop users)
+### 1. MCP Server (Recommended for Claude Desktop/Droid users)
 
 Integrate with Claude Desktop to search FAQs conversationally:
 
@@ -190,7 +232,7 @@ All configuration is done via environment variables (`.env` file):
 | `CHROMA_HOST` | ChromaDB host | `localhost` |
 | `CHROMA_PORT` | ChromaDB port | `8000` |
 | `CHROMA_SSL` | Use SSL for ChromaDB | `false` |
-| `COLLECTION_NAME` | ChromaDB collection name | `internal-faq` |
+| `COLLECTION_NAME` | ChromaDB collection name | `brainbox` |
 | `FAQS_PATH` | FAQ files directory | `./data/faqs` |
 | `CORS_ORIGIN` | Allowed CORS origins | `*` |
 
@@ -207,7 +249,7 @@ Key deployment options:
 ## Project Structure
 
 ```
-internal-faq-hub/
+brainbox/
 ├── src/
 │   ├── api.ts          # REST API server
 │   ├── ingest.ts       # CLI tool to ingest FAQ files
@@ -264,7 +306,8 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for security best practices.
 - Check `CHROMA_HOST` and `CHROMA_PORT` in `.env`
 
 ### Embedding service errors
-- Verify LM Studio is running with an embedding model loaded
+- Verify your embedding service (LM Studio or llama.cpp) is running with an embedding model loaded
+- For llama.cpp, ensure you started the server with the `--embedding` flag
 - Check `LMSTUDIO_URL` in `.env`
 - Test the endpoint: `curl http://127.0.0.1:1234/v1/models`
 
