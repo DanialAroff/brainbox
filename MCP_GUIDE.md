@@ -44,7 +44,7 @@ This compiles TypeScript to JavaScript in the `dist` folder.
 Create or update `.env` file:
 
 ```env
-LMSTUDIO_URL=http://127.0.0.1:1234/v1/embeddings
+EMBEDDING_SERVICE_URL=http://127.0.0.1:1234/v1/embeddings
 EMBED_MODEL=text-embedding-nomic-embed-text-v1.5
 CHROMA_HOST=localhost
 CHROMA_PORT=8000
@@ -90,7 +90,7 @@ Press `Ctrl+C` to stop.
       "command": "node",
       "args": ["D:/Programming/internal-faq-hub/dist/mcp-server.js"],
       "env": {
-        "LMSTUDIO_URL": "http://127.0.0.1:1234/v1/embeddings",
+        "EMBEDDING_SERVICE_URL": "http://127.0.0.1:1234/v1/embeddings",
         "EMBED_MODEL": "text-embedding-nomic-embed-text-v1.5",
         "CHROMA_HOST": "localhost",
         "CHROMA_PORT": "8000",

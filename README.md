@@ -80,7 +80,7 @@ wget https://huggingface.co/nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/nom
 
 **4. Update your `.env` file:**
 ```env
-LMSTUDIO_URL=http://127.0.0.1:1234/v1/embeddings
+EMBEDDING_SERVICE_URL=http://127.0.0.1:1234/v1/embeddings
 EMBED_MODEL=nomic-embed-text-v1.5
 ```
 
@@ -227,7 +227,7 @@ All configuration is done via environment variables (`.env` file):
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `PORT` | API server port | `3000` |
-| `LMSTUDIO_URL` | Embedding service URL | `http://127.0.0.1:1234/v1/embeddings` |
+| `EMBEDDING_SERVICE_URL` | Embedding service URL | `http://127.0.0.1:1234/v1/embeddings` |
 | `EMBED_MODEL` | Embedding model name | `text-embedding-nomic-embed-text-v1.5` |
 | `CHROMA_HOST` | ChromaDB host | `localhost` |
 | `CHROMA_PORT` | ChromaDB port | `8000` |
@@ -308,7 +308,7 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for security best practices.
 ### Embedding service errors
 - Verify your embedding service (LM Studio or llama.cpp) is running with an embedding model loaded
 - For llama.cpp, ensure you started the server with the `--embedding` flag
-- Check `LMSTUDIO_URL` in `.env`
+- Check `EMBEDDING_SERVICE_URL` in `.env`
 - Test the endpoint: `curl http://127.0.0.1:1234/v1/models`
 
 ### File path errors

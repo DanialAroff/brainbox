@@ -12,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Configuration from environment variables with defaults
-export const LMSTUDIO_URL = process.env.LMSTUDIO_URL || "http://127.0.0.1:1234/v1/embeddings";
+export const EMBEDDING_SERVICE_URL = process.env.EMBEDDING_SERVICE_URL || "http://127.0.0.1:1234/v1/embeddings";
 export const EMBED_MODEL = process.env.EMBED_MODEL || "text-embedding-nomic-embed-text-v1.5";
 export const CHROMA_HOST = process.env.CHROMA_HOST || "localhost";
 export const CHROMA_PORT = parseInt(process.env.CHROMA_PORT || "8000", 10);
@@ -29,7 +29,7 @@ export function getChromaClient() {
 }
 
 export async function embedText(text: string): Promise<number[]> {
-  const res = await axios.post(LMSTUDIO_URL, {
+  const res = await axios.post(EMBEDDING_SERVICE_URL, {
     model: EMBED_MODEL,
     input: text,
   });

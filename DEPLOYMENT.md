@@ -28,9 +28,9 @@ Edit `.env` with your production values:
 # Server Configuration
 PORT=3000
 
-# LM Studio / Embedding Service Configuration
-# This should point to your production embedding service
-LMSTUDIO_URL=https://your-embedding-service.com/v1/embeddings
+# Embedding Service Configuration
+# This should point to your production embedding service (LM Studio, llama.cpp, or any OpenAI-compatible API)
+EMBEDDING_SERVICE_URL=https://your-embedding-service.com/v1/embeddings
 EMBED_MODEL=text-embedding-nomic-embed-text-v1.5
 
 # ChromaDB Configuration
@@ -157,7 +157,7 @@ CORS_ORIGIN=https://yourdomain.com,https://app.yourdomain.com
 
 3. **Add environment variables**:
    ```bash
-   railway variables set LMSTUDIO_URL="your-url"
+   railway variables set EMBEDDING_SERVICE_URL="your-url"
    railway variables set CHROMA_HOST="your-host"
    # ... add all other env vars
    ```
@@ -363,7 +363,7 @@ app.use((req, res, next) => {
    - Check firewall rules
 
 2. **Embedding service timeout**:
-   - Verify `LMSTUDIO_URL` is correct and accessible
+   - Verify `EMBEDDING_SERVICE_URL` is correct and accessible
    - Check if embedding service is running
    - Increase timeout if needed
 
