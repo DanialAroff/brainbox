@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import fs from "fs-extra";
 import path from "path";
+import rateLimit from "express-rate-limit";
 import {
   getChromaClient,
   embedText,
@@ -17,6 +18,29 @@ const PORT = process.env.PORT || 3000;
 const corsOptions = {
   origin: process.env.CORS_ORIGIN || "*",
 };
+
+// Rate limiting configuration
+const generalLimiter = rateLimit({
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || "900000"), // 15 minutes default
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || "100"), // 100 requests per window default
+  message: {
+    error: "Too many requests from this IP, please try again later.",
+    retryAfter: "15 minutes",
+  },
+  standardHeaders: true, // Return rate limit info in `RateLimit-*` headers
+  legacyHeaders: false, // Disable `X-RateLimit-*` headers
+});
+
+const strictLimiter = rateLimit({
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || "900000"), // 15 minutes default
+  max: parseInt(process.env.RATE_LIMIT_MAX_EXPENSIVE || "20"), // 20 requests per window for expensive operations
+  message: {
+    error: "Too many expensive requests from this IP, please try again later.",
+    retryAfter: "15 minutes",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 // Middleware
 app.use(cors(corsOptions));
@@ -39,7 +63,7 @@ app.get("/health", (req, res) => {
 });
 
 // Search FAQ endpoint
-app.post("/api/search", async (req, res) => {
+app.post("/api/search", generalLimiter, async (req, res) => {
   try {
     const { query, limit = 3 } = req.body;
 
@@ -83,7 +107,7 @@ app.post("/api/search", async (req, res) => {
 });
 
 // Ingest files endpoint
-app.post("/api/ingest", async (req, res) => {
+app.post("/api/ingest", strictLimiter, async (req, res) => {
   try {
     const { chunkSize = 500, overlap = 50 } = req.body;
 
@@ -129,7 +153,7 @@ app.post("/api/ingest", async (req, res) => {
 });
 
 // Embed text endpoint
-app.post("/api/embed", async (req, res) => {
+app.post("/api/embed", strictLimiter, async (req, res) => {
   try {
     const { text } = req.body;
 
@@ -158,7 +182,7 @@ app.post("/api/embed", async (req, res) => {
 });
 
 // Chunk text endpoint
-app.post("/api/chunk", async (req, res) => {
+app.post("/api/chunk", generalLimiter, async (req, res) => {
   try {
     const { text, chunkSize = 500, overlap = 50 } = req.body;
 
