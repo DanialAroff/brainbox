@@ -187,7 +187,69 @@ All endpoints return error responses in the following format:
 
 Common HTTP status codes:
 - `400`: Bad Request (missing or invalid parameters)
+- `429`: Too Many Requests (rate limit exceeded)
 - `500`: Internal Server Error
+
+---
+
+## Rate Limiting
+
+The API implements rate limiting to prevent abuse and protect resources. Rate limits are applied per IP address.
+
+### Rate Limit Tiers
+
+**General Endpoints** (100 requests per 15 minutes):
+- `/api/search`
+- `/api/chunk`
+
+**Expensive Endpoints** (20 requests per 15 minutes):
+- `/api/ingest` - Processes multiple files and generates embeddings
+- `/api/embed` - Calls external embedding service
+
+**Unlimited Endpoints**:
+- `/health` - Health check endpoint has no rate limit
+
+### Rate Limit Headers
+
+When rate limits are applied, responses include standard rate limit headers:
+
+```
+RateLimit-Limit: 100
+RateLimit-Remaining: 95
+RateLimit-Reset: 1699876543
+```
+
+### Rate Limit Exceeded Response
+
+When you exceed the rate limit, you'll receive a `429` status code:
+
+```json
+{
+  "error": "Too many requests from this IP, please try again later.",
+  "retryAfter": "15 minutes"
+}
+```
+
+### Configuration
+
+Rate limits can be configured via environment variables:
+
+```bash
+# Time window in milliseconds (default: 900000 = 15 minutes)
+RATE_LIMIT_WINDOW_MS=900000
+
+# Maximum requests per window for general endpoints (default: 100)
+RATE_LIMIT_MAX_REQUESTS=100
+
+# Maximum requests per window for expensive operations (default: 20)
+RATE_LIMIT_MAX_EXPENSIVE=20
+```
+
+To disable rate limiting, set very high values (not recommended for production):
+```bash
+RATE_LIMIT_MAX_REQUESTS=999999
+RATE_LIMIT_MAX_EXPENSIVE=999999
+```
 
 ---
 
